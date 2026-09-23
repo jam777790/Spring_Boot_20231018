@@ -52,5 +52,36 @@
 <img width="566" height="264" alt="image" src="https://github.com/user-attachments/assets/1feb1dfd-31db-412b-9aa6-fb342180e3b1" />
 <img width="569" height="449" alt="image" src="https://github.com/user-attachments/assets/001071ef-98b3-4961-a44b-5ae382fbbebb" />
 
+### 📌 3주차: Spring Boot 기반 개인 포트폴리오(프론트엔드) 구축
 
+#### 🛠️ 실습 내용
+
+1. **웹 트렌드 분석 및 프레임워크 이해**
+   * **웹 호스팅 및 견적 분석:** 일반 웹 호스팅(카페24, 아임웹 등)과 맞춤형 VPS/클라우드 호스팅의 차이 이해 및 고객 요구사항별 최적 호스팅 환경 파악
+   * **스프링 부트 기술 스택 적합성:** 맞춤형 웹 서비스 개발 및 VPS/클라우드 환경(예: Cafe24 VPS, Java 21, Spring Boot 3.5 기준)에서의 스프링 부트 구조(MVC 및 API 방식) 및 Tomcat WAS/MySQL 연동 구조 이해
+
+2. **개인 포트폴리오 템플릿(Bootstrap 5) 이식**
+   * **템플릿 다운로드 및 설정:** TemplateMo 578 (`First Portfolio`, Bootstrap 5 기반 원페이지 템플릿) 활용
+   * **정적 자원 및 템플릿 정렬:** `index.html`은 `src/main/resources/templates/` 경로로 이동하고, 정적 자원(`css/`, `js/`, `images/`, `fonts/`)은 `src/main/resources/static/` 하위로 구조화
+   * **Thymeleaf URL 매핑 적용:** `index.html` 상단에 `<html xmlns:th="http://www.thymeleaf.org">` 선언 및 상대경로 자원들을 Thymeleaf 문법(`th:href="@{/...}"`, `th:src="@{/...}"`)으로 전환
+
+3. **프로필 수정 및 접근성/버그 개선**
+   * **네비게이션 메뉴 한글화:** 네비바 항목(홈페이지, 소개, 기술, 프로젝트, 연락처) 한글화 및 CSS 수정(`--menu-font-size` 조정)을 통한 가시성 확보
+   * **HTML 접근성 및 버그 수정:** 개발자 도구(F12)를 통해 Form 요소의 `<label for="...">`와 `<input id="...">` 불일치 버그를 수정하여 스크린 리더 접근성 및 입력창 포커싱 개선
+   * **프로필 섹션 커스텀:** Hero 섹션 내 프로필 이미지(`profile.png`) 교체 및 개인 소개 키워드 설정[cite: 6]
+
+4. **기술/경험(Services) 섹션 및 정적 상세 페이지 구현**
+   * **기술 분야 재구성:** 4가지 관심 분야(웹, AI, 보안, 게임 등)로 세부 영역 재구성 및 Bootstrap Icons(CDN/최신 아이콘 코드)을 통한 시각화
+   * **정적 상세 페이지 추가:** 컨트롤러 연동 없이 바로 접근 가능한 `src/main/resources/public/` 경로에 정적 파일(`detailed_web.html` 등)을 생성하여 서비스 상세 연결 구현
+   * **외부 링크 보안 처리:** Target 백링크 사용 시 `target="_blank" rel="noopener noreferrer"` 속성을 추가하여 피싱 예방 및 보안 강화
+5. **모바일 반응형 검증 및 Lighthouse 성능 분석**
+   * **반응형 뷰포트 검증:** F12 개발자 모드(Device Toolbar, `Ctrl` + `Shift` + `M`)를 통해 다양한 모바일/태블릿 해상도 환경 테스트
+   * **Lighthouse 성능 측정:** PC 및 모바일 환경에서 Performance, Accessibility, Best Practices, SEO 항목별 점수를 측정하고 성능 저하 원인 분석
+   * **Git 연동 및 README 업데이트:** 실습 결과물 커밋/푸시 및 README.md 내 파일/소스코드 링크 등록
+
+---
+
+#### ✏️ [과제 실습] 4개 기술 영역 완성 및 상세 페이지 구현
+* **기술/경험 아이콘 및 내용 완성:** 웹, AI, 보안, 게임 등 4개 영역의 아이콘 및 설명글 업데이트 완료
+* **세부 페이지 추가:** `detailed_web.html`을 참고하여 باقي 기술 영역별 정적 상세 페이지 작성 및 연동 링크 구축 완료
 
