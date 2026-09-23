@@ -40,7 +40,9 @@
 4. **URL 매핑 및 Controller/Thymeleaf 연동**
    * **`DemoController.java` 작성:** `@Controller`, `@GetMapping("/hello")` 어노테이션을 이용해 URL 경로 매핑 및 `Model` 객체로 데이터 전달 (`model.addAttribute("data", "반갑습니다.")`)
    * **`hello.html` 작성:** Thymeleaf 문법 `<p th:text="${data}"></p>` 사용을 통한 동적 데이터 바인딩 테스트
-   * **[과제 실습] `/hello2` 매핑 추가:** 컨트롤러에 5개 속성 변수 추가 및 `hello2.html`을 통한 화면 출력 완료
+
+#### ✏️ [과제 실습] 4개 기술 영역 완성 및 상세 페이지 구현
+`/hello2` 매핑 추가:** 컨트롤러에 5개 속성 변수 추가 및 `hello2.html`을 통한 화면 출력 완료
 
 ---
 
@@ -68,20 +70,24 @@
 3. **프로필 수정 및 접근성/버그 개선**
    * **네비게이션 메뉴 한글화:** 네비바 항목(홈페이지, 소개, 기술, 프로젝트, 연락처) 한글화 및 CSS 수정(`--menu-font-size` 조정)을 통한 가시성 확보
    * **HTML 접근성 및 버그 수정:** 개발자 도구(F12)를 통해 Form 요소의 `<label for="...">`와 `<input id="...">` 불일치 버그를 수정하여 스크린 리더 접근성 및 입력창 포커싱 개선
-   * **프로필 섹션 커스텀:** Hero 섹션 내 프로필 이미지(`profile.png`) 교체 및 개인 소개 키워드 설정[cite: 6]
+   * **프로필 섹션 커스텀:** Hero 섹션 내 프로필 이미지(`profile.png`) 교체 및 개인 소개 키워드 설정
 
 4. **기술/경험(Services) 섹션 및 정적 상세 페이지 구현**
    * **기술 분야 재구성:** 4가지 관심 분야(웹, AI, 보안, 게임 등)로 세부 영역 재구성 및 Bootstrap Icons(CDN/최신 아이콘 코드)을 통한 시각화
    * **정적 상세 페이지 추가:** 컨트롤러 연동 없이 바로 접근 가능한 `src/main/resources/public/` 경로에 정적 파일(`detailed_web.html` 등)을 생성하여 서비스 상세 연결 구현
    * **외부 링크 보안 처리:** Target 백링크 사용 시 `target="_blank" rel="noopener noreferrer"` 속성을 추가하여 피싱 예방 및 보안 강화
-5. **모바일 반응형 검증 및 Lighthouse 성능 분석**
-   * **반응형 뷰포트 검증:** F12 개발자 모드(Device Toolbar, `Ctrl` + `Shift` + `M`)를 통해 다양한 모바일/태블릿 해상도 환경 테스트
-   * **Lighthouse 성능 측정:** PC 및 모바일 환경에서 Performance, Accessibility, Best Practices, SEO 항목별 점수를 측정하고 성능 저하 원인 분석
-   * **Git 연동 및 README 업데이트:** 실습 결과물 커밋/푸시 및 README.md 내 파일/소스코드 링크 등록
+
+#### ✏️ [과제 실습] 4개 기술 영역 완성 및 상세 페이지 구현
+* **기술/경험 아이콘 및 내용 완성:** 웹, AI, 보안, 게임 등 4개 영역의 아이콘 및 설명글 업데이트
+* **세부 페이지 추가:** `detailed_web.html`을 참고하여 상세 페이지 작성 및 연동 링크 구축
 
 ---
 
-#### ✏️ [과제 실습] 4개 기술 영역 완성 및 상세 페이지 구현
-* **기술/경험 아이콘 및 내용 완성:** 웹, AI, 보안, 게임 등 4개 영역의 아이콘 및 설명글 업데이트 완료
-* **세부 페이지 추가:** `detailed_web.html`을 참고하여 باقي 기술 영역별 정적 상세 페이지 작성 및 연동 링크 구축 완료
+### 💬 느낀점
+
+
+
+<img src="https://github.com/user-attachments/assets/919d250e-3d72-43cd-82ed-90fad87874e0" width="700" alt="Lighthouse 성능 측정 결과 1" />
+<br><br>
+<img src="https://github.com/user-attachments/assets/36e09ffc-c53a-4f7c-a4c3-9f736c9b083f" width="700" alt="Lighthouse 성능 측정 결과 2" />
 
