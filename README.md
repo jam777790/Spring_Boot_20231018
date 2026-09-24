@@ -86,20 +86,13 @@
 ### 💬 느낀점
 
 <div align="center">
-
-<!-- Lighthouse 요약 리포트 -->
-<h3>📊 Lighthouse 성능 측정 결과</h3>
 <p>
   <img src="https://github.com/user-attachments/assets/919d250e-3d72-43cd-82ed-90fad87874e0" width="600" alt="Lighthouse 성능 측정 결과 1" />
 </p>
 <p>
   <img src="https://github.com/user-attachments/assets/36e09ffc-c53a-4f7c-a4c3-9f736c9b083f" width="600" alt="Lighthouse 성능 측정 결과 2" />
 </p>
-
 <hr />
-
-<!-- 상세 측정 화면 -->
-<h3>🖼️ 상세 성능 분석 스크린샷</h3>
 <p>
   <img src="https://github.com/user-attachments/assets/599d07a8-efcb-4bb8-ac40-07bd3a51213e" width="800" alt="분석 결과 1" /><br />
   <img src="https://github.com/user-attachments/assets/b9a27816-0476-4030-95ec-26965af8cab2" width="800" alt="분석 결과 2" /><br />
