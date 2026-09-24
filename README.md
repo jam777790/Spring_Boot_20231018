@@ -51,7 +51,9 @@
 처음 다뤄보는 Spring Boot와 VS Code의 확장 환경이 익숙지 않았지만, Spring Initializr를 통해 복잡한 XML 설정 없이 손쉽게 웹 프로젝트 생태계를 구축할 수 있어 흥미로웠습니다. 특히 DispatcherServlet과 Thymeleaf가 연동되어 컨트롤러에서 전달한 데이터가 HTML에 동적으로 렌더링되는 과정을 직접 확인하며 웹 MVC 아키텍처의 흐름을 명확하게 이해할 수 있었습니다.
 
 <img width="559" height="243" alt="image" src="https://github.com/user-attachments/assets/4d6a7b90-6fc6-442b-a4b4-d2b2d466fda5" />\
+<hr />
 <img width="566" height="264" alt="image" src="https://github.com/user-attachments/assets/1feb1dfd-31db-412b-9aa6-fb342180e3b1" />
+<hr />
 <img width="569" height="449" alt="image" src="https://github.com/user-attachments/assets/001071ef-98b3-4961-a44b-5ae382fbbebb" />
 
 ### 📌 3주차: Spring Boot 기반 개인 포트폴리오(프론트엔드) 구축
