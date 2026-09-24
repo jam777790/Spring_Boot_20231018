@@ -85,9 +85,25 @@
 
 ### 💬 느낀점
 
-<img src="https://github.com/user-attachments/assets/919d250e-3d72-43cd-82ed-90fad87874e0" width="700" alt="Lighthouse 성능 측정 결과 1" />
+<!-- Lighthouse 성능 측정 결과 -->
+<div align="center">
+  <img src="https://github.com/user-attachments/assets/919d250e-3d72-43cd-82ed-90fad87874e0" width="700" alt="Lighthouse 성능 측정 결과 1" />
+  <br><br>
+  <img src="https://github.com/user-attachments/assets/36e09ffc-c53a-4f7c-a4c3-9f736c9b083f" width="700" alt="Lighthouse 성능 측정 결과 2" />
+</div>
+
 <br><br>
-<img src="https://github.com/user-attachments/assets/36e09ffc-c53a-4f7c-a4c3-9f736c9b083f" width="700" alt="Lighthouse 성능 측정 결과 2" />
+
+<!-- 상세 스크린샷 모음 -->
+<div align="center">
+  <img src="https://github.com/user-attachments/assets/599d07a8-efcb-4bb8-ac40-07bd3a51213e" width="700" alt="image 1" />
+  <br><br>
+  <img src="https://github.com/user-attachments/assets/b9a27816-0476-4030-95ec-26965af8cab2" width="700" alt="image 2" />
+  <br><br>
+  <img src="https://github.com/user-attachments/assets/7143043c-6440-4f0a-8dbf-79b4a3ec1a55" width="700" alt="image 3" />
+  <br><br>
+  <img src="https://github.com/user-attachments/assets/d45ef1ee-9025-4558-ad9e-4b2d824414dd" width="700" alt="image 4" />
+</div>
 
 ### 📌 4주차: Spring Boot 데이터베이스 연동 및 테스트
 
