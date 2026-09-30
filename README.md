@@ -62,7 +62,7 @@
 
 1. **웹 트렌드 분석 및 프레임워크 이해**
    * **웹 호스팅 및 견적 분석:** 일반 웹 호스팅(카페24, 아임웹 등)과 맞춤형 VPS/클라우드 호스팅의 차이 이해 및 고객 요구사항별 최적 호스팅 환경 파악
-   * **스프링 부트 기술 스택 적합성:** 맞춤형 웹 서비스 개발 및 VPS/클라우드 환경(예: Cafe24 VPS, Java 21, Spring Boot 3.5 기준)에서의 스프링 부트 구조(MVC 및 API 방식) 및 Tomcat WAS/MySQL 연동 구조 이해
+   * **스프링 부트 기술 스택 적합성:** 맞춤형 웹 서비스 개발 및 VPS/클라우드 환경(예: Cafe24 VPS, Java 25 LTS, Spring Boot 3.5 기준)에서의 스프링 부트 구조(MVC 및 API 방식) 및 Tomcat WAS/MySQL 연동 구조 이해
 
 2. **개인 포트폴리오 템플릿(Bootstrap 5) 이식**
    * **템플릿 다운로드 및 설정:** TemplateMo 578 (`First Portfolio`, Bootstrap 5 기반 원페이지 템플릿) 활용
