@@ -150,4 +150,47 @@
 * `INSERT` 문을 활용하여 데이터베이스에 사용자 정보를 저장
 * `testdb.html`을 수정하여 추가된 사용자 정보를 웹 화면에 출력
 
+<img width="298" height="277" alt="image" src="https://github.com/user-attachments/assets/f6336856-d75e-4cb7-9ae0-0304158d3634" />
+<img width="1263" height="271" alt="image" src="https://github.com/user-attachments/assets/8f5dfdde-1b1c-403f-b5b5-3a6f64c80e2f" />
 
+제시해주신 2주차 README 양식과 동일한 구조 및 마크다운 포맷으로 작성한 **5주차 README 자료**입니다.
+
+---
+
+### 📌 5주차: Spring Security 기반 로그인/로그아웃 및 비밀번호 암호화
+
+#### 🛠️ 실습 내용
+
+1. **웹 보안 트렌드 및 인증/인가 이해**
+  * 웹 보안 트렌드:** OWASP Top 10(2025) 기준 접근 제어 실패(A01) 및 인증 실패(A07)가 주요 보안 위험 항목. 해킹 공격의 주요 시작점인 로그인/인증 검사 강화 필요.
+  * 인증 vs 인가:** 인증(Authentication, "너 누구야?")은 사용자 신원 확인, 인가(Authorization, "너 이거 해도 돼?")는 권한(USER/ADMIN) 검증.
+  * 비밀번호 저장 및 암호화:** 개인정보 안전성 확보조치 기준에 따라 단방향 해시(BCrypt) 저장. BCrypt는 매번 무작위 Salt(22자)를 자동 생성하여 동일한 비밀번호도 항상 다른 해시 결과로 저장하여 대입 공격을 방지.
+  * 인증 방식의 변화:** 세션(Session, JSESSIONID 쿠키 기반) ➡️ 토큰(JWT) ➡️ 소셜 로그인(OAuth2) ➡️ 패스키(Passkey).
+
+2. **의존성 모듈 추가 및 보안 필터 체인(SecurityFilterChain) 구조**
+  * 의존성(Dependencies) 추가:** `pom.xml`에 `spring-boot-starter-security` 및 `thymeleaf-extras-springsecurity6` 추가.
+  * 필터 기반 보안:** DispatcherServlet/Controller 도달 전 `SecurityFilterChain` 내의 여러 보안 필터(`CsrfFilter`, `UsernamePasswordAuthenticationFilter`, `LogoutFilter`, `AuthorizationFilter` 등)를 순차 통과하여 인증 및 권한을 검사.
+
+3. **스프링 시큐리티 설정 및 회원 관리 아키텍처 구축**
+  * `SecurityConfig.java` 작성:**
+  * `@Bean` 등록으로 `BCryptPasswordEncoder` 암호화 객체 제공.
+  * `authorizeHttpRequests`: `/`, `/login`, `/signup`, 정적 리소스 (`/css/**`, `/js/**` 등)는 `permitAll()`, 그 외 요청(`anyRequest()`)은 `authenticated()` 지정.
+  * `formLogin`: 사용자 정의 로그인 페이지 (`/login`), 성공 시 기본 URL (`/`), 실패 시 URL (`/login?error`) 설정.
+  * `logout`: `/logout` 요청 시 세션 무효화 (`invalidateHttpSession`) 및 `JSESSIONID` 쿠키 삭제 처리.
+  * **도메인 및 데이터 전달 객체:**
+  * `Member.java` (@Entity): PK 자동 증가(`@GeneratedValue`), `username`(unique, 필수), BCrypt 암호화 값 저장 `password`, `name`, `role` 필드 구성.
+  * `MemberForm.java` (DTO): 화면 input 이름과 바인딩되는 DTO로 엔티티 직접 노출 방지 및 권한 조작 차단.
+  * **리포지토리 & 서비스:**
+  * `MemberRepository.java`: `findByUsername()`, `existsByUsername()` 메소드 선언.
+  * `MemberService.java`: `UserDetailsService` 인터페이스 구현, `loadUserByUsername()`을 오버라이딩하여 시큐리티 인증 프로세스와 DB 회원 데이터 연결. 회원가입 시 아이디 중복 체크 및 `passwordEncoder.encode()`로 암호화 후 DB 저장.
+
+4. **컨트롤러 및 Thymeleaf 연동 (UI/UX)**
+  * `MemberController.java` 작성: * `@GetMapping("/login")`, `@GetMapping("/signup")`, `@PostMapping("/signup")` 처리 구현.
+  * Thymeleaf Security 태그 사용: *
+  * `sec:authorize="isAnonymous()"`: 비로그인 상태 시 로그인 버튼 노출.
+  * `sec:authorize="isAuthenticated()"` 및 `sec:authentication="name"`: 로그인 성공 시 사용자 아이디 및 로그아웃 버튼 노출.
+
+#### ✏️️ [과제 실습] 로그인 기능 개선 및 검증 로직 구현
+
+**로그인 상태 유지 (`remember-me`) 기능 추가**
+**회원가입 비밀번호 확인 검증 로직 구현**
