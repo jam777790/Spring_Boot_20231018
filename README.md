@@ -153,8 +153,6 @@
 <img width="298" height="277" alt="image" src="https://github.com/user-attachments/assets/f6336856-d75e-4cb7-9ae0-0304158d3634" />
 <img width="1263" height="271" alt="image" src="https://github.com/user-attachments/assets/8f5dfdde-1b1c-403f-b5b5-3a6f64c80e2f" />
 
-제시해주신 2주차 README 양식과 동일한 구조 및 마크다운 포맷으로 작성한 **5주차 README 자료**입니다.
-
 ---
 
 # 📌 5주차: Spring Security 기반 로그인/로그아웃 및 비밀번호 암호화
