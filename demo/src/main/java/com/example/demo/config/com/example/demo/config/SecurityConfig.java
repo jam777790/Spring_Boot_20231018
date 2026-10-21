@@ -8,6 +8,10 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.http.HttpStatus;
+import org.springframework.security.config.Customizer;
+import org.springframework.security.web.authentication.HttpStatusEntryPoint;
+
 
 @Configuration
 @EnableWebSecurity
@@ -27,18 +31,31 @@ public class SecurityConfig {
                 .requestMatchers("/", "/hello", "/detailed_web*.html", "/detailed_web*",
                                 "/login", "/signup", "/error").permitAll()
                 .requestMatchers("/css/**", "/js/**", "/images/**", "/fonts/**").permitAll()
-                .requestMatchers("/admin/**").hasRole("ADMIN") // [6주차] 관리자만
+                .requestMatchers("/admin/**","/api/admin/**").hasRole("ADMIN")
+                .requestMatchers("/api/hello").permitAll() // [6주차] 관리자만
                 .anyRequest().authenticated())
+                
             .formLogin(form -> form // 2. 폼 로그인 설정 (인증)
                 .loginPage("/login")
                 .defaultSuccessUrl("/")
                 .failureUrl("/login?error")
                 .permitAll())
+
             .logout(logout -> logout // 3. 로그아웃 설정
                 .logoutUrl("/logout") // 로그아웃 처리 URL (POST)
                 .logoutSuccessUrl("/login?logout") // 로그아웃 후 이동
                 .invalidateHttpSession(true) // 세션 삭제
-                .deleteCookies("JSESSIONID", "remember-me")); // 쿠키 삭제
+                .deleteCookies("JSESSIONID", "remember-me")) // 쿠키 삭제
+
+            .rememberMe(rm -> rm // 4. Remember Me 설정
+                .key("remember-me-key") // 키 값 (서버마다 달라야 함)
+                .tokenValiditySeconds(60 * 60 * 24 * 7)) // 7일간 유지
+
+            .httpBasic(Customizer.withDefaults()) // Postman : 요청마다 아이디·비밀번호 (Basic 인증)
+            .csrf(csrf -> csrf.ignoringRequestMatchers("/api/**")) // JSON API 는 CSRF 토큰 검사 제외
+            .exceptionHandling(ex -> ex.defaultAuthenticationEntryPointFor( // 로그인 안 한 API 요청 :
+            new HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED), // 로그인 화면(302) 대신 401
+            request -> request.getRequestURI().startsWith("/api/")));
 
         return http.build();
     }
