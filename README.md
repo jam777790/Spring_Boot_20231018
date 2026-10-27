@@ -201,9 +201,13 @@
 * **회원가입 비밀번호 확인 검증 로직 구현**
 
 <img width="1918" height="1109" alt="image" src="https://github.com/user-attachments/assets/663bd851-76b8-4eae-875a-a3d965f72fd6" />
+<img width="1919" height="1025" alt="image" src="https://github.com/user-attachments/assets/13f55ade-ad5f-46d5-a2ca-5d3b737e2859" />
 <img width="640" height="762" alt="image" src="https://github.com/user-attachments/assets/f4ae0ae0-99fd-4277-a784-bbcca905b74b" />
 <img width="535" height="860" alt="image" src="https://github.com/user-attachments/assets/7bfe3850-ad75-444f-a650-d237f79c84ef" />
 <img width="871" height="212" alt="image" src="https://github.com/user-attachments/assets/041cc66e-0334-4ae6-9b6d-90e26e7418b9" />
+<img width="699" height="125" alt="image" src="https://github.com/user-attachments/assets/e5c22ea5-65c4-41ab-a359-ef3dd1980eca" />
+<img width="437" height="657" alt="image" src="https://github.com/user-attachments/assets/a7b35e01-3bce-47ec-8e5c-fa093e04cb95" />
+
 
 # 📌 6주차: Spring Security 기반 권한 관리 및 관리자 페이지 구현
 
