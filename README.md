@@ -203,3 +203,115 @@
 <img width="640" height="762" alt="image" src="https://github.com/user-attachments/assets/f4ae0ae0-99fd-4277-a784-bbcca905b74b" />
 <img width="535" height="860" alt="image" src="https://github.com/user-attachments/assets/7bfe3850-ad75-444f-a650-d237f79c84ef" />
 <img width="871" height="212" alt="image" src="https://github.com/user-attachments/assets/041cc66e-0334-4ae6-9b6d-90e26e7418b9" />
+
+# 📌 6주차: Spring Security 기반 권한 관리 및 관리자 페이지 구현
+
+## 🛠️ 실습 내용
+
+### 1. 웹 보안 트렌드 및 접근 제어 이해
+
+* **OWASP Top 10 - 접근 제어 실패(A01):** 로그인한 사용자라도 권한 검사를 누락하면 관리자 페이지 접근, 타인 정보 조회(IDOR), 권한 상승 등의 보안 문제가 발생할 수 있음.
+* **인증(Authentication) vs 인가(Authorization):** 인증은 사용자의 신원을 확인하는 과정이며, 인가는 사용자의 역할과 권한에 따라 접근 가능 여부를 검사하는 과정.
+* **권한 관리 모델(RBAC):** 역할(Role)을 기반으로 권한을 관리하는 방식으로, `USER`, `MANAGER`, `ADMIN` 등의 역할을 사용하여 접근 권한을 구분.
+* **최소 권한 원칙(Least Privilege):** 사용자에게 업무 수행에 필요한 최소한의 권한만 부여하여 보안 사고 발생 시 피해를 최소화.
+* **핵심 보안 원칙:** 화면에서 메뉴를 숨기는 것만으로는 보안이 보장되지 않으며, 실제 요청과 기능 실행 단계에서 권한을 검사해야 함.
+
+### 2. Spring Security 권한 제어 구조
+
+* **URL 기반 접근 제어:** `SecurityConfig.java`의 `authorizeHttpRequests()`와 `requestMatchers()`를 사용하여 URL별 접근 권한 설정.
+    * `permitAll()`: 누구나 접근 가능.
+    * `authenticated()`: 로그인한 사용자만 접근 가능.
+    * `hasRole("ADMIN")`: 관리자 권한을 가진 사용자만 접근 가능.
+* **메서드 기반 접근 제어:** `@PreAuthorize`를 사용하여 서비스 메서드 실행 직전에 권한 검사.
+    * `@EnableMethodSecurity`를 설정 클래스에 추가해야 메서드 보안이 활성화됨.
+    * 회원 권한 변경 및 삭제 기능을 관리자 전용으로 제한.
+* **이중 보안 구조:** URL 기반 검사와 메서드 기반 검사를 함께 적용하여 URL 설정 오류나 새로운 API 추가 등으로 발생할 수 있는 보안 취약점을 방지.
+* **ROLE과 Authority:** `.roles("ADMIN")`은 내부적으로 `ROLE_ADMIN` 권한으로 변환됨. 따라서 `hasRole("ADMIN")`처럼 `ROLE_` 접두사를 제외한 역할 이름을 사용.
+
+### 3. 로그인 사용자 정보 및 마이페이지 구현
+
+* **`MemberService.java`:**
+    * `findByUsername()` 메서드를 추가하여 로그인한 사용자의 회원 정보를 조회.
+    * `findAll()` 메서드를 추가하여 전체 회원 목록을 조회하고 ID 순서로 정렬.
+* **`MemberController.java`:**
+    * `@GetMapping("/mypage")`를 사용하여 마이페이지 구현.
+    * `Principal` 객체의 `getName()`으로 현재 로그인한 사용자의 아이디를 가져와 회원 정보 조회.
+    * URL에 회원 ID를 직접 입력받는 대신 로그인 정보를 사용하여 IDOR 취약점 방지.
+* **Thymeleaf Security 태그:**
+    * `sec:authorize="isAuthenticated()"`: 로그인한 사용자에게만 내 정보 메뉴 표시.
+    * `sec:authorize="hasRole('ADMIN')"`: 관리자에게만 관리자 메뉴 표시.
+    * `sec:authentication="name"`: 로그인한 사용자의 아이디 표시.
+* **세션 권한 관리:** 데이터베이스에서 회원의 역할을 변경해도 이미 로그인한 세션의 권한은 즉시 바뀌지 않으므로, 변경된 권한을 적용하려면 다시 로그인해야 함.
+
+### 4. 관리자 계정 및 회원 관리 기능 구현
+
+* **관리자 계정 생성:**
+    * 회원가입 화면에서 `admin` 계정을 정상적으로 생성.
+    * SQL을 이용하여 해당 회원의 `role`을 `ADMIN`으로 변경.
+    * 로그아웃 후 다시 로그인하여 관리자 권한 적용 여부 확인.
+    * 비밀번호는 BCrypt로 암호화된 값을 사용해야 하므로, 평문 비밀번호를 직접 SQL로 저장하지 않음.
+* **`AdminController.java`:**
+    * `@RequestMapping("/admin")`을 사용하여 관리자 페이지 URL을 분리.
+    * `@GetMapping("/members")`를 통해 `/admin/members`에서 전체 회원 목록 조회.
+    * `@PostMapping("/members/{id}/role")`로 회원 권한 변경 처리.
+    * `@PostMapping("/members/{id}/delete")`로 회원 삭제 처리.
+* **`MemberService.java`의 회원 관리 로직:**
+    * `changeRole()` 메서드로 회원 권한 변경.
+    * `deleteMember()` 메서드로 회원 삭제.
+    * `findById()`를 이용해 회원 존재 여부를 확인한 후 변경 또는 삭제 수행.
+    * `save()`는 기존 ID가 있으면 수정하고, 새로운 ID라면 삽입하는 방식으로 동작.
+* **권한 화이트리스트(Whitelist):** 허용된 역할을 `USER`, `ADMIN`으로 제한하여 개발자 도구 등을 통해 `MANAGER`와 같은 임의의 값을 전달해도 거부하도록 검증.
+* **PRG 패턴(Post-Redirect-Get):** 처리 후 `redirect:/admin/members`로 이동하고 `RedirectAttributes`의 Flash 메시지를 사용하여 새로고침에 따른 중복 요청을 방지.
+
+### 5. URL 및 메서드 기반 보안 적용과 검증
+
+* **URL 접근 제어 설정:** `SecurityConfig.java`에서 `/admin/**` 경로를 관리자 전용으로 제한.
+
+  ```java
+  .requestMatchers("/admin/**").hasRole("ADMIN")
+  .anyRequest().authenticated()
+  ```
+
+* **메서드 보안 적용:** `SecurityConfig.java`에 `@EnableMethodSecurity`를 추가하고, 회원 권한 변경 및 삭제 메서드에 `@PreAuthorize("hasRole('ADMIN')")` 적용.
+* **접근 제어 3단계:**
+    1. **화면 제어:** `sec:authorize`로 메뉴 표시 여부를 제어.
+    2. **URL 제어:** `requestMatchers()`로 컨트롤러 접근을 차단.
+    3. **메서드 제어:** `@PreAuthorize`로 핵심 서비스 로직 실행을 차단.
+* **접근 결과 검증:**
+    * 비로그인 사용자: 관리자 URL 접근 시 로그인 화면으로 리다이렉트(302).
+    * `USER`: 관리자 페이지 접근 시 403 Forbidden 응답.
+    * `ADMIN`: 관리자 페이지 접근 및 회원 관리 기능 사용 가능.
+* **403 접근 거부 페이지:** `templates/error/403.html`을 생성하여 아이디, 권한, 요청 주소 등을 표시하는 접근 거부 화면 구현.
+* **예외 상황 검증:** URL 규칙이 누락되더라도 메서드 보안이 회원 권한 변경 및 삭제를 차단하는지 확인.
+
+### 6. GitHub 연동 및 오류 해결
+
+* **README.md 수정:** 6주차 권한(Role) 기반 접근 제어 및 관리자 페이지 구현 내용을 정리.
+* **Git 연동:** 추가·수정한 파일을 커밋(Commit)한 후 푸시(Push)하여 GitHub 저장소에 업로드.
+* **주요 오류 해결:**
+    * `ROLE_ADMIN should not start with ROLE_`: `hasRole("ROLE_ADMIN")` 대신 `hasRole("ADMIN")` 사용.
+    * `Can't configure requestMatchers after anyRequest`: `anyRequest()`를 마지막에 배치.
+    * `@PreAuthorize`가 동작하지 않음: `@EnableMethodSecurity` 설정 확인.
+    * SQL로 권한을 변경했지만 관리자 메뉴가 보이지 않음: 로그아웃 후 재로그인.
+    * 403 화면이 표시되지 않음: `templates/error/403.html` 경로 확인.
+    * `/admin/members`에서 500 오류 발생: `return "admin/members"`와 템플릿 폴더 구조 확인.
+    * 권한 변경 시 400 오류 발생: HTML의 `name="role"`과 `@RequestParam String role` 일치 여부 확인.
+
+---
+
+#### ✏️ [과제 실습] 관리자 보호 및 MANAGER 권한 추가
+
+* **관리자 본인 보호 기능 구현**
+    * 관리자가 자기 자신의 권한을 `USER`로 변경하거나 계정을 삭제하지 못하도록 제한.
+    * `SecurityContextHolder`에서 현재 로그인한 사용자의 아이디를 가져와 대상 회원과 비교.
+    * 본인 권한 변경 또는 삭제 시 오류 메시지를 표시하고 작업을 거부.
+
+* **MANAGER 권한 추가**
+    * 회원 권한 변경 시 `MANAGER` 역할도 선택할 수 있도록 허용 목록 수정.
+    * `/testdb` 경로를 `ADMIN`, `MANAGER`만 접근할 수 있도록 제한하고 `USER`는 접근할 수 없도록 설정.
+    * `hasAnyRole("ADMIN", "MANAGER")`를 사용하여 여러 역할에 대한 접근 권한 설정.
+
+* **추가 도전 과제**
+    * 회원 목록 메뉴가 `USER`에게 표시되지 않도록 화면 권한 제어 적용.
+    * 비로그인 사용자, `USER`, `MANAGER`, `ADMIN` 계정별로 URL 접근 및 기능 실행 결과 검증.
+
