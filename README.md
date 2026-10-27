@@ -284,19 +284,6 @@
 * **403 접근 거부 페이지:** `templates/error/403.html`을 생성하여 아이디, 권한, 요청 주소 등을 표시하는 접근 거부 화면 구현.
 * **예외 상황 검증:** URL 규칙이 누락되더라도 메서드 보안이 회원 권한 변경 및 삭제를 차단하는지 확인.
 
-### 6. GitHub 연동 및 오류 해결
-
-* **README.md 수정:** 6주차 권한(Role) 기반 접근 제어 및 관리자 페이지 구현 내용을 정리.
-* **Git 연동:** 추가·수정한 파일을 커밋(Commit)한 후 푸시(Push)하여 GitHub 저장소에 업로드.
-* **주요 오류 해결:**
-    * `ROLE_ADMIN should not start with ROLE_`: `hasRole("ROLE_ADMIN")` 대신 `hasRole("ADMIN")` 사용.
-    * `Can't configure requestMatchers after anyRequest`: `anyRequest()`를 마지막에 배치.
-    * `@PreAuthorize`가 동작하지 않음: `@EnableMethodSecurity` 설정 확인.
-    * SQL로 권한을 변경했지만 관리자 메뉴가 보이지 않음: 로그아웃 후 재로그인.
-    * 403 화면이 표시되지 않음: `templates/error/403.html` 경로 확인.
-    * `/admin/members`에서 500 오류 발생: `return "admin/members"`와 템플릿 폴더 구조 확인.
-    * 권한 변경 시 400 오류 발생: HTML의 `name="role"`과 `@RequestParam String role` 일치 여부 확인.
-
 ---
 
 #### ✏️ [과제 실습] 관리자 보호 및 MANAGER 권한 추가
@@ -314,4 +301,177 @@
 * **추가 도전 과제**
     * 회원 목록 메뉴가 `USER`에게 표시되지 않도록 화면 권한 제어 적용.
     * 비로그인 사용자, `USER`, `MANAGER`, `ADMIN` 계정별로 URL 접근 및 기능 실행 결과 검증.
+
+# 📌 7주차: REST API와 JSON 기반 회원 관리 기능 구현
+
+## 🛠️ 실습 내용
+
+### 1. 웹 개발 트렌드 및 REST API 이해
+
+* **API(Application Programming Interface):** 프로그램끼리 데이터를 주고받기 위한 약속으로, 요청(Request)과 응답(Response)을 통해 데이터를 전달.
+* **프론트엔드와 백엔드의 역할 분리:**
+    * SSR(Server-Side Rendering): 서버가 Thymeleaf로 HTML을 완성하여 브라우저에 전달.
+    * CSR(Client-Side Rendering): 백엔드는 JSON 데이터를 제공하고, 프론트엔드는 React, Vue 등의 기술로 화면을 구성.
+    * 관리자 화면은 Thymeleaf를 사용하고, 모바일 앱 및 외부 서비스 연동은 REST API를 사용하는 방식으로 혼용 가능.
+* **REST API:** 자원은 URL로 표현하고, 작업은 HTTP 메서드로 구분하는 API 설계 방식.
+    * `GET`: 데이터 조회.
+    * `POST`: 데이터 생성.
+    * `PATCH`: 데이터 일부 수정.
+    * `DELETE`: 데이터 삭제.
+* **JSON(JavaScript Object Notation):** 서버와 클라이언트 사이에서 데이터를 전달하는 표준 형식.
+    * `{}`: 객체.
+    * `[]`: 배열.
+    * 문자열, 숫자, 불리언(`true`, `false`), `null` 등의 값을 사용.
+* **API 테스트 도구:** Postman, 브라우저 개발자 도구(F12), `curl` 등을 사용하여 요청과 응답 확인.
+
+### 2. Spring Boot REST API 구현
+
+* **`MemberApiController.java` 작성:**
+    * `@RestController`: HTML 화면 이름 대신 객체나 데이터를 반환하는 컨트롤러.
+    * `@RequestMapping("/api")`: 해당 컨트롤러의 모든 URL 앞에 `/api` 경로 적용.
+    * `@GetMapping("/hello")`: 첫 번째 API인 `GET /api/hello` 구현.
+* **JSON 자동 변환:** `Map<String, Object>` 등의 객체를 반환하면 Spring이 JSON 응답으로 변환.
+* **첫 번째 API 테스트:** `/api/hello`에 접속하여 메시지와 현재 시간이 JSON 형식으로 출력되는지 확인.
+* **공개 API 설정:** `SecurityConfig.java`에 `/api/hello`를 `permitAll()`로 설정하여 로그인하지 않아도 접근할 수 있도록 구성.
+
+### 3. 응답 DTO를 이용한 개인정보 보호
+
+* **문제점:** `Member` 엔티티를 그대로 반환하면 getter가 제공하는 필드가 JSON으로 노출되어 BCrypt 비밀번호 해시까지 응답에 포함될 수 있음.
+* **응답 DTO(Response DTO):** 클라이언트에 전달할 데이터만 별도로 구성하여 불필요한 정보 노출을 방지.
+* **`MemberResponse.java` 작성:**
+    * `id`, `username`, `name`, `role` 필드만 포함.
+    * `password` 필드는 제외.
+    * `Member` 엔티티를 응답 DTO로 변환하는 `from()` 메서드 구현.
+    * Java `record`를 사용하여 DTO 코드를 간결하게 작성.
+* **DTO의 역할 구분:**
+    * `Member`: 데이터베이스 저장용 엔티티.
+    * `MemberForm`: 회원가입 등 클라이언트에서 서버로 전달하는 요청 DTO.
+    * `MemberResponse`: 서버에서 클라이언트로 전달하는 응답 DTO.
+* **내 정보 API 구현:** `GET /api/me`에서 `Principal`의 `getName()`으로 로그인한 사용자를 확인하고, `MemberResponse.from(member)`를 반환.
+* **보안 핵심:** 데이터베이스 엔티티를 그대로 반환하지 않고 요청과 응답에 적합한 DTO를 각각 사용하여 권한 조작과 개인정보 노출을 방지.
+
+### 4. Postman 테스트 및 API 인증 설정
+
+* **Postman:** 브라우저 외부에서 서버에 직접 API 요청을 보내고, 응답 본문과 HTTP 상태 코드를 확인하는 도구.
+* **세션 기반 인증의 한계:** 브라우저는 로그인 후 세션 쿠키를 자동으로 전송하지만, Postman은 별도로 인증 정보를 설정하지 않으면 로그인된 사용자로 인식되지 않음.
+* **Basic 인증:** 요청마다 아이디와 비밀번호를 전달하여 사용자를 인증하는 방식.
+    * `아이디:비밀번호` 문자열을 Base64로 인코딩하여 전달.
+    * Base64는 암호화가 아니므로 실제 서비스에서는 반드시 HTTPS를 사용해야 함.
+* **`SecurityConfig.java` 설정:**
+    * `httpBasic(Customizer.withDefaults())`: Basic 인증 활성화.
+    * `csrf(csrf -> csrf.ignoringRequestMatchers("/api/**"))`: 실습에서 JSON API 경로의 CSRF 검사를 제외.
+    * `HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED)`: 인증되지 않은 API 요청에 로그인 화면 리다이렉트 대신 401 응답 반환.
+* **인증 테스트:**
+    * 인증 정보 없음: `401 Unauthorized`.
+    * 올바른 Basic 인증 정보: `200 OK`.
+    * 잘못된 비밀번호: `401 Unauthorized`.
+* **HTTP 상태 코드 구분:**
+    * `302 Found`: 로그인 화면 등으로 리다이렉트.
+    * `401 Unauthorized`: 인증 정보가 없거나 올바르지 않음.
+    * `403 Forbidden`: 인증은 되었지만 접근 권한이 없음.
+
+### 5. REST API 주소 설계 및 HTTP 상태 코드
+
+* **REST 주소 설계:** URL은 자원을 나타내고, HTTP 메서드는 수행할 작업을 나타냄.
+
+| 기능 | HTTP 메서드 | REST API 주소 |
+|---|---|---|
+| 회원 목록 조회 | GET | `/api/admin/members` |
+| 회원 한 명 조회 | GET | `/api/admin/members/3` |
+| 회원 등록 | POST | `/api/admin/members` |
+| 회원 권한 변경 | PATCH | `/api/admin/members/3/role` |
+| 회원 삭제 | DELETE | `/api/admin/members/3` |
+
+* **주요 HTTP 상태 코드:**
+    * `200 OK`: 조회 또는 수정 성공.
+    * `201 Created`: 새로운 데이터 생성 성공.
+    * `204 No Content`: 작업 성공, 응답 본문 없음.
+    * `400 Bad Request`: 잘못된 요청, 중복 아이디 또는 허용되지 않는 권한.
+    * `401 Unauthorized`: 인증 실패.
+    * `403 Forbidden`: 권한 부족.
+    * `404 Not Found`: 요청한 회원이나 자원이 존재하지 않음.
+* **`ResponseEntity`:** 응답 본문과 HTTP 상태 코드를 직접 지정할 때 사용.
+    * `ResponseEntity.ok(body)`: 200 응답.
+    * `ResponseEntity.created(uri).body(body)`: 201 응답 및 `Location` 헤더 설정.
+    * `ResponseEntity.noContent().build()`: 204 응답.
+    * `ResponseEntity.badRequest().body(error)`: 400 응답.
+    * `ResponseEntity.notFound().build()`: 404 응답.
+
+### 6. 관리자 REST API 구현
+
+* **`AdminApiController.java` 작성:**
+    * `@RestController`와 `@RequestMapping("/api/admin/members")`를 사용하여 관리자 회원 관리 API 구성.
+    * `GET /api/admin/members`: 전체 회원 조회.
+    * `GET /api/admin/members/{id}`: 특정 회원 조회.
+    * `POST /api/admin/members`: 회원 등록.
+    * `PATCH /api/admin/members/{id}/role`: 회원 권한 변경.
+    * `DELETE /api/admin/members/{id}`: 회원 삭제.
+* **회원 목록 조회:** `MemberService.findAll()`로 조회한 엔티티 목록을 `MemberResponse` 목록으로 변환하여 반환.
+* **회원 한 명 조회:** `Optional<Member>`와 `ResponseEntity`를 이용하여 회원이 존재하면 200, 존재하지 않으면 404 응답 반환.
+* **회원 등록:**
+    * `@RequestBody`를 사용하여 JSON 요청 본문을 `MemberForm` 객체로 변환.
+    * 기존 `MemberService.signup()`을 재사용하여 회원가입 처리 및 BCrypt 비밀번호 암호화.
+    * 등록 성공 시 201 응답과 `Location` 헤더 반환.
+    * 중복 아이디나 필수 입력값 누락 시 400 응답 반환.
+* **필수 입력값 검증:** API 요청에는 HTML의 `required` 검사가 자동 적용되지 않으므로 서비스에서 아이디, 비밀번호, 이름 등의 빈 값 검사 수행.
+* **요청 DTO를 통한 권한 조작 방지:** `MemberForm`에 `role` 필드가 없으므로 요청 JSON에 `"role": "ADMIN"`을 추가하더라도 해당 값으로 권한을 지정할 수 없음.
+
+### 7. 회원 권한 변경 및 삭제 API
+
+* **`RoleRequest.java` 작성:** 권한 변경 요청 본문인 `{"role": "ADMIN"}`을 전달받는 DTO.
+* **`MemberService.changeRole()` 수정:**
+    * 반환형을 `void`에서 `Member`로 변경.
+    * 권한 변경 후 `memberRepository.save(member)`의 결과를 반환하여 수정된 회원 정보를 응답에 활용.
+* **회원 권한 변경:** `PATCH /api/admin/members/{id}/role` 요청으로 권한을 변경하고, 성공 시 변경된 회원 정보를 `MemberResponse`로 반환.
+* **회원 삭제:** `DELETE /api/admin/members/{id}` 요청으로 회원을 삭제하고, 성공 시 204 응답 반환.
+* **기존 보안 로직 재사용:**
+    * `@PreAuthorize("hasRole('ADMIN')")`를 통한 관리자 권한 검사.
+    * 허용된 역할만 지정할 수 있도록 화이트리스트 검증.
+    * 관리자가 본인의 권한을 변경하거나 계정을 삭제하지 못하도록 본인 보호 로직 적용.
+* **오류 응답:** 권한이 허용되지 않거나 회원이 존재하지 않는 경우 등 서비스 검증 과정에서 발생하는 `IllegalArgumentException`을 처리하여 400 응답과 오류 메시지 반환.
+* **보안 규칙 추가:** `SecurityConfig.java`에서 `/admin/**`뿐 아니라 `/api/admin/**`에도 `hasRole("ADMIN")`을 적용하여 API 경로를 보호.
+
+### 8. Postman 테스트 및 화면 연동
+
+* **관리자 API 테스트:**
+    * 관리자 계정으로 전체 회원 조회: 200.
+    * 존재하는 회원 조회: 200.
+    * 존재하지 않는 회원 조회: 404.
+    * `USER` 계정으로 관리자 API 호출: 403.
+    * 정상적인 회원 등록: 201.
+    * 중복 아이디 또는 필수값 누락: 400.
+    * 정상적인 권한 변경: 200.
+    * 허용되지 않은 권한 변경: 400.
+    * 관리자 본인의 권한 변경 시도: 400.
+    * `USER` 계정의 회원 삭제 시도: 403.
+    * 관리자 계정의 회원 삭제 성공: 204.
+* **Thymeleaf 화면과 API 연동:**
+    * `AdminController.java`에 `/admin/members-api` 경로를 추가하여 API를 사용하는 화면 연결.
+    * `templates/admin/members-api.html`에서 `fetch`를 사용하여 서버 API 호출.
+    * 회원 등록, 권한 변경, 삭제 등의 결과를 화면에 반영하며 페이지 전체 새로고침 없이 데이터 갱신.
+* **인증 방식 비교:**
+    * 브라우저의 `fetch`: 로그인 세션 쿠키를 사용.
+    * Postman: Basic 인증 정보를 요청에 포함.
+    * 서로 다른 인증 방식을 사용해도 동일한 API와 서버의 보안 규칙을 적용받음.
+
+---
+
+#### ✏️ [과제 실습] 회원 검색 API 및 공통 오류 처리 구현
+
+* **회원 검색 API 구현**
+    * `GET /api/admin/members?keyword=student` 형태의 검색 API 구현.
+    * 아이디 또는 이름에 검색어가 포함된 회원만 조회.
+    * `@RequestParam(required = false)`로 선택적 검색어 전달.
+    * `findBy...Containing...Or...Containing` 형태의 리포지토리 메서드를 활용하여 검색 기능 구현.
+    * 제공된 회원 관리 화면의 검색창과 연동하여 검색 결과 확인.
+
+* **공통 오류 처리 구현**
+    * 회원 등록, 수정, 삭제 과정에서 반복되는 `try-catch` 코드를 개선.
+    * `@RestControllerAdvice`를 사용하여 API의 오류 처리를 한곳으로 통합.
+    * 공통 오류 처리 적용 전후의 응답 상태 코드와 오류 메시지가 동일하게 동작하는지 검증.
+
+* **추가 확인 사항**
+    * `/api/hello`부터 `/api/me`, 관리자 API까지 순서대로 테스트.
+    * `USER`와 `ADMIN` 계정별 접근 권한 검증.
+    * Postman의 요청 메서드, 인증 정보, JSON 본문 및 응답 상태 코드 확인.
 
