@@ -205,7 +205,6 @@
 <img width="640" height="762" alt="image" src="https://github.com/user-attachments/assets/f4ae0ae0-99fd-4277-a784-bbcca905b74b" />
 <img width="535" height="860" alt="image" src="https://github.com/user-attachments/assets/7bfe3850-ad75-444f-a650-d237f79c84ef" />
 <img width="871" height="212" alt="image" src="https://github.com/user-attachments/assets/041cc66e-0334-4ae6-9b6d-90e26e7418b9" />
-<img width="699" height="125" alt="image" src="https://github.com/user-attachments/assets/e5c22ea5-65c4-41ab-a359-ef3dd1980eca" />
 <img width="437" height="657" alt="image" src="https://github.com/user-attachments/assets/a7b35e01-3bce-47ec-8e5c-fa093e04cb95" />
 
 
@@ -306,6 +305,11 @@
 * **추가 도전 과제**
     * 회원 목록 메뉴가 `USER`에게 표시되지 않도록 화면 권한 제어 적용.
     * 비로그인 사용자, `USER`, `MANAGER`, `ADMIN` 계정별로 URL 접근 및 기능 실행 결과 검증.
+
+<img width="1919" height="1023" alt="image" src="https://github.com/user-attachments/assets/f94662a1-1c06-40b7-84bc-e17f7f2b39af" />
+<img width="516" height="895" alt="image" src="https://github.com/user-attachments/assets/2e34fbf7-ee05-4c01-9b47-80dcac18ae89" />
+<img width="1919" height="1027" alt="image" src="https://github.com/user-attachments/assets/a96df1b3-e1b2-4fbb-80e4-e48faa2b1baf" />
+<img width="1919" height="1020" alt="image" src="https://github.com/user-attachments/assets/ded5c0ec-a199-4dcb-8a81-0cbfd9174599" />
 
 # 📌 7주차: REST API와 JSON 기반 회원 관리 기능 구현
 
@@ -479,4 +483,7 @@
     * `/api/hello`부터 `/api/me`, 관리자 API까지 순서대로 테스트.
     * `USER`와 `ADMIN` 계정별 접근 권한 검증.
     * Postman의 요청 메서드, 인증 정보, JSON 본문 및 응답 상태 코드 확인.
+
+<img width="1919" height="1030" alt="image" src="https://github.com/user-attachments/assets/7cb2d160-e8cf-475e-ae25-2ef184813e8e" />
+<img width="371" height="378" alt="image" src="https://github.com/user-attachments/assets/f85080be-8a5e-4b8c-9a8d-2f0357fb367b" />
 
