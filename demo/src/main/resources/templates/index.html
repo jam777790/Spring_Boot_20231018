@@ -44,9 +44,17 @@
             @media (min-width: 992px) {
                 .navbar-expand-lg .navbar-nav .nav-link { margin-left: 12px; margin-right: 12px; }
             }
-            @media (min-width: 992px) and (max-width: 1199px) {
-                .navbar-expand-lg .navbar-nav .nav-link { margin-left: 7px; margin-right: 7px; font-size: 15px; }
+            /* [9주차] 게시판 메뉴 추가 → 화면 폭별로 간격 조정 */
+            @media (min-width: 1200px) and (max-width: 1399px) {
+                .navbar-expand-lg .navbar-nav .nav-link { margin-left: 8px; margin-right: 8px; font-size: 15px; }
                 .navbar i.navbar-icon { display: none; }
+            }
+            @media (min-width: 992px) and (max-width: 1199px) {
+                .navbar-expand-lg .navbar-nav .nav-link { margin-left: 4px; margin-right: 4px; font-size: 13.5px; }
+                .navbar i.navbar-icon { display: none; }
+                .navbar .role-badge { display: none; }
+                .navbar .custom-btn { padding: 8px 14px; }
+                .navbar-brand { font-size: 24px; }
             }
         </style>
 
@@ -110,6 +118,11 @@ https://templatemo.com/tm-578-first-portfolio
                             <a class="nav-link click-scroll" href="#section_5">연락처</a>
                         </li>
 
+                        <!-- [9주차] 게시판 : 목록·상세는 누구나, 글쓰기는 로그인 -->
+                        <li class="nav-item">
+                            <a class="nav-link" th:href="@{/board}">게시판</a>
+                        </li>
+
                         <!-- [5주차] 회원 전용 페이지 : 로그인하지 않으면 로그인 화면으로 이동 -->
                         <li class="nav-item">
                             <a class="nav-link" th:href="@{/testdb}">회원목록</a>
@@ -159,7 +172,6 @@ https://templatemo.com/tm-578-first-portfolio
 
         <main>
 
-             <!-- 히어로 섹션 (두 번째 코드의 이환희 님 내용 유지) -->
             <section class="hero d-flex justify-content-center align-items-center" id="section_1">
                 <div class="container">
                     <div class="row">
@@ -167,12 +179,12 @@ https://templatemo.com/tm-578-first-portfolio
                         <div class="col-lg-7 col-12">
                             <div class="hero-text">
                                 <div class="hero-title-wrap d-flex align-items-center mb-4">
-                                    <img th:src="@{/images/KakaoTalk_20260916_130413364.jpg}" class="avatar-image avatar-image-large img-fluid" alt="">
+                                    <img th:src="@{/images/profile.jpg}" class="avatar-image avatar-image-large img-fluid" alt="">
 
-                                    <h1 class="hero-title ms-3 mb-0">안녕하세요. 이환희입니다!</h1>
+                                    <h1 class="hero-title ms-3 mb-0">안녕하세요, 여러분!</h1>
                                 </div>
 
-                                <h2 class="mb-4">IT 관련 대학원 진학을 꿈꾸고 있습니다.</h2>
+                                <h2 class="mb-4">저는 웹 풀스택 개발자입니다.</h2>
                                 <p class="mb-4"><a class="custom-btn btn custom-link" href="#section_2">Let's begin</a></p>
                             </div>
                         </div>
@@ -203,7 +215,7 @@ https://templatemo.com/tm-578-first-portfolio
                                 <div class="section-title-wrap d-flex justify-content-end align-items-center mb-4">
                                     <h2 class="text-white me-4 mb-0">My Story</h2>
 
-                                    <img th:src="@{/images/happy-bearded-young-man.jpg}" class="avatar-image img-fluid" alt="">
+                                    <img th:src="@{/images/profile.jpg}" class="avatar-image img-fluid" alt="">
                                 </div>
 
                                 <h3 class="pt-2 mb-3">a little bit about Joshua</h3>
@@ -241,7 +253,7 @@ https://templatemo.com/tm-578-first-portfolio
 
                                     <p>
                                         <span class="profile-small-title">Phone</span> 
-                                        <span><a href="tel: 305-240-9671">120-240-9600</a></span>
+                                         <span><a href="tel: 305-240-9671">120-240-9600</a></span>
                                     </p>
 
                                     <p>
@@ -320,7 +332,6 @@ https://templatemo.com/tm-578-first-portfolio
             </section>
 
 
-            <!-- 기술 섹션 (두 번째 코드의 상세 내용 유지) -->
             <section class="services section-padding" id="section_3">
                 <div class="container">
                     <div class="row">
@@ -329,103 +340,91 @@ https://templatemo.com/tm-578-first-portfolio
                             <div class="section-title-wrap d-flex justify-content-center align-items-center mb-5">
                                 <img th:src="@{/images/handshake-man-woman-after-signing-business-contract-closeup.jpg}" class="avatar-image img-fluid" alt="">
 
-                                <h2 class="text-white ms-4 mb-0">기술 / 경험</h2>
+                                <h2 class="text-white ms-4 mb-0">기술/경험</h2>
                             </div>
 
                             <div class="row pt-lg-5">
-    <!-- 1. 게임 개발 -->
-    <div class="col-lg-6 col-12">
-        <div class="services-thumb">
-            <div class="d-flex flex-wrap align-items-center border-bottom mb-4 pb-3">
-                <h3 class="mb-0">게임 개발</h3>
-                <div class="services-price-wrap ms-auto">
-                    <p class="services-price-text mb-0">$2,400</p>
-                    <div class="services-price-overlay"></div>
-                </div>
-            </div>
+                                <div class="col-lg-6 col-12">
+                                    <div class="services-thumb">
+                                        <div class="d-flex flex-wrap align-items-center border-bottom mb-4 pb-3">
+                                            <h3 class="mb-0">(웹)Websites</h3>
 
-            <p>2026 2학년 경진대회 (게임 메인 시스템 개발 - 수상)</p>
-            <p>2026 게임젬 대회 참가 (게임 메인 시스템 개발 협업)</p>
-            <p>2026 2학년 M&M 소모임 (Unity 게임 개발 공부)</p>
+                                            <div class="services-price-wrap ms-auto">
+                                                <p class="services-price-text mb-0">$2,400</p>
+                                                <div class="services-price-overlay"></div>
+                                            </div>
+                                        </div>
 
-            <!-- 공백 인코딩(%20) 적용 또는 올바른 파일 경로로 수정 -->
-            <a href="/detailed_web1.html" target="_blank" rel="noopener noreferrer" class="custom-btn custom-border-btn btn mt-3">Discover More</a>
+                                        <p>You may want to explore Too CSS for great collection of free HTML CSS templates.</p>
 
-            <div class="services-icon-wrap d-flex justify-content-center align-items-center">
-                <i class="services-icon bi-controller"></i>
-            </div>
-        </div>
-    </div>
+                                        <a href="/detailed_web.html" target="_blank" rel="noopener noreferrer" class="custom-btn custom-border-btn btn mt-3">Discover More</a>
 
-    <!-- 2. 게임 기획 -->
-    <div class="col-lg-6 col-12">
-        <div class="services-thumb services-thumb-up">
-            <div class="d-flex flex-wrap align-items-center border-bottom mb-4 pb-3">
-                <h3 class="mb-0">게임 기획</h3>
-                <div class="services-price-wrap ms-auto">
-                    <p class="services-price-text mb-0">$1,200</p>
-                    <div class="services-price-overlay"></div>
-                </div>
-            </div>
+                                        <div class="services-icon-wrap d-flex justify-content-center align-items-center">
+                                            <i class="services-icon bi-globe"></i>
+                                        </div>
+                                    </div>
+                                </div>
 
-            <p>2026 2학년 경진대회 (게임 기획서 제작 - 수상)</p>
-            <p>2026 게임젬 대회 참가 (게임 기획)</p>
-            <p>2026 2학년 M&M 소모임 (게임 기획서 제작)</p>
+                                <div class="col-lg-6 col-12">
+                                    <div class="services-thumb services-thumb-up">
+                                        <div class="d-flex flex-wrap align-items-center border-bottom mb-4 pb-3">
+                                            <h3 class="mb-0">(AI)인공지능</h3>
 
-            <a href="/detailed_web2.html" target="_blank" rel="noopener noreferrer" class="custom-btn custom-border-btn btn mt-3">Discover More</a>
+                                            <div class="services-price-wrap ms-auto">
+                                                <p class="services-price-text mb-0">$1,200</p>
+                                                <div class="services-price-overlay"></div>
+                                            </div>
+                                        </div>
 
-            <div class="services-icon-wrap d-flex justify-content-center align-items-center">
-                <i class="services-icon bi-book"></i>
-            </div>
-        </div>
-    </div>
+                                        <p>You can explore more CSS templates on TemplateMo website by browsing through different tags.</p>
 
-    <!-- 3. AI 활용 -->
-    <div class="col-lg-6 col-12">
-        <div class="services-thumb">
-            <div class="d-flex flex-wrap align-items-center border-bottom mb-4 pb-3">
-                <h3 class="mb-0">AI 활용</h3>
-                <div class="services-price-wrap ms-auto">
-                    <p class="services-price-text mb-0">$3,600</p>
-                    <div class="services-price-overlay"></div>
-                </div>
-            </div>
+                                        <a href="#" class="custom-btn custom-border-btn btn mt-3">Discover More</a>
 
-            <p>2026 디지털 디자인 강의 (포토샵 / AI 활용한 책표지 디자인)</p>
-            <p>2026 경진대회, 게임젬 대회 (Vibe 코딩)</p>
-            <p>중간, 기말 준비 (AI를 활용한 퀴즈, 내용 정리 및 분석, 시험 대비 자료 제작)</p>
+                                        <div class="services-icon-wrap d-flex justify-content-center align-items-center">
+                                            <i class="services-icon bi-anthropic"></i>
+                                        </div>
+                                    </div>
+                                </div>
 
-            <a href="/detailed_web3.html" target="_blank" rel="noopener noreferrer" class="custom-btn custom-border-btn btn mt-3">Discover More</a>
+                                <div class="col-lg-6 col-12">
+                                    <div class="services-thumb">
+                                        <div class="d-flex flex-wrap align-items-center border-bottom mb-4 pb-3">
+                                            <h3 class="mb-0">(보안)Security</h3>
 
-            <div class="services-icon-wrap d-flex justify-content-center align-items-center">
-                <i class="services-icon bi-robot"></i>
-            </div>
-        </div>
-    </div>
+                                            <div class="services-price-wrap ms-auto">
+                                                <p class="services-price-text mb-0">$3,600</p>
+                                                <div class="services-price-overlay"></div>
+                                            </div>
+                                        </div>
 
-    <!-- 4. 진로 탐색 / 대학원 분석 -->
-    <div class="col-lg-6 col-12">
-        <div class="services-thumb services-thumb-up">
-            <div class="d-flex flex-wrap align-items-center border-bottom mb-4 pb-3">
-                <h3 class="mb-0">진로 탐색 / 대학원 분석</h3>
-                <div class="services-price-wrap ms-auto">
-                    <p class="services-price-text mb-0">$1,450</p>
-                    <div class="services-price-overlay"></div>
-                </div>
-            </div>
+                                        <p>If you need a customized ecommerce website for your business, feel free to discuss with me.</p>
 
-            <p>관심 분야 및 전공 관련 논문 탐색</p>
-            <p>논문 초안 작성</p>
-            <p>추후 3, 4학년 계획 세우기 (관심 분야 논문 작성, Lab 탐색 등)</p>
+                                        <a href="#" class="custom-btn custom-border-btn btn mt-3">Discover More</a>
 
-            <a href="/detailed_web4.html" target="_blank" rel="noopener noreferrer" class="custom-btn custom-border-btn btn mt-3">Discover More</a>
+                                        <div class="services-icon-wrap d-flex justify-content-center align-items-center">
+                                            <i class="services-icon bi-phone"></i>
+                                        </div>
+                                    </div>
+                                </div>
 
-            <div class="services-icon-wrap d-flex justify-content-center align-items-center">
-                <i class="services-icon bi-pen"></i>
-            </div>
-        </div>
-    </div>
-</div>
+                                <div class="col-lg-6 col-12">
+                                    <div class="services-thumb services-thumb-up">
+                                        <div class="d-flex flex-wrap align-items-center border-bottom mb-4 pb-3">
+                                            <h3 class="mb-0">(게임)GAME</h3>
+
+                                            <div class="services-price-wrap ms-auto">
+                                                <p class="services-price-text mb-0">$1,450</p>
+                                                <div class="services-price-overlay"></div>
+                                            </div>
+                                        </div>
+
+                                        <p>To list your website first on any search engine, we will work together. First Portfolio is one-page CSS Template for free download.</p>
+
+                                        <a href="#" class="custom-btn custom-border-btn btn mt-3">Discover More</a>
+
+                                        <div class="services-icon-wrap d-flex justify-content-center align-items-center">
+                                            <i class="services-icon bi-google"></i>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -433,6 +432,7 @@ https://templatemo.com/tm-578-first-portfolio
                     </div>
                 </div>
             </section>
+
 
             <section class="projects section-padding" id="section_4">
                 <div class="container">
