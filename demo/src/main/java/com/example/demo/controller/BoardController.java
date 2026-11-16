@@ -18,8 +18,8 @@ import com.example.demo.model.service.PostService;
 @RequestMapping("/board")
 public class BoardController {
 
-    @Autowired // ① 필드 추가 (postService 아래)
-    CommentService commentService;
+    @Autowired
+    private CommentService commentService;
 
     @Autowired
     private PostService postService;
@@ -37,6 +37,41 @@ public class BoardController {
         model.addAttribute("posts", posts.getContent());
         model.addAttribute("page", posts);
         model.addAttribute("keyword", keyword);
+
+        // 일반 게시판 페이지 이동 주소
+        model.addAttribute("pageUrl", "/board");
+
+        return "board/list";
+    }
+
+    // 9주차: 내가 쓴 글 목록
+    // GET /board/my
+    @GetMapping("/my")
+    public String myPosts(
+            @RequestParam(defaultValue = "0") int page,
+            Principal principal,
+            Model model) {
+
+        // 현재 로그인한 사용자의 아이디
+        String username = principal.getName();
+
+        // 해당 사용자가 작성한 게시글 조회
+        Page<Post> posts = postService.findMyPosts(
+            username,
+            page
+        );
+
+        model.addAttribute("posts", posts.getContent());
+        model.addAttribute("page", posts);
+
+        // 화면 제목
+        model.addAttribute("listTitle", "내가 쓴 글");
+
+        // 검색어 없음
+        model.addAttribute("keyword", null);
+
+        // 내가 쓴 글 페이지 이동 주소
+        model.addAttribute("pageUrl", "/board/my");
 
         return "board/list";
     }
@@ -60,8 +95,8 @@ public class BoardController {
         try {
 
             Post post = postService.write(
-                    postForm,
-                    principal.getName()
+                postForm,
+                principal.getName()
             );
 
             return "redirect:/board/" + post.getId();
@@ -75,16 +110,18 @@ public class BoardController {
         }
     }
 
-    // 게시글 상세 조회
+    // 게시글 상세 조회 및 조회수 증가
     @GetMapping("/{id}")
     public String detail(
             @PathVariable Long id,
             Model model) {
 
-        Post post = postService.findById(id);
+        // 상세 페이지에 들어갈 때마다 조회수 증가
+        Post post = postService.read(id);
 
         model.addAttribute("post", post);
 
+        // 댓글 기능 유지
         model.addAttribute("comments", commentService.findByPost(post));
 
         return "board/detail";

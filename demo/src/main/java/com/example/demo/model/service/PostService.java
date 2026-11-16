@@ -13,6 +13,7 @@ import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
 import com.example.demo.model.domain.Member;
@@ -35,6 +36,7 @@ public class PostService {
 
     // 전체 게시글 목록 (최신 글 순서)
     public List<Post> findAll() {
+
         return postRepository.findAll(
             Sort.by(Sort.Direction.DESC, "id")
         );
@@ -89,6 +91,33 @@ public class PostService {
                     "글이 존재하지 않습니다."
                 )
             );
+    }
+
+    // 9주차: 게시글 조회 및 조회수 증가
+    @Transactional
+    public Post read(Long id) {
+
+        Post post = findById(id);
+
+        // 조회할 때마다 조회수 1 증가
+        post.setViewCount(post.getViewCount() + 1);
+
+        return postRepository.save(post);
+    }
+
+    // 9주차: 내가 작성한 게시글 조회
+    public Page<Post> findMyPosts(String username, int page) {
+
+        PageRequest pageable = PageRequest.of(
+            Math.max(page, 0),
+            PAGE_SIZE,
+            Sort.by(Sort.Direction.DESC, "id")
+        );
+
+        return postRepository.findByAuthor_UsernameOrderByIdDesc(
+            username,
+            pageable
+        );
     }
 
     // 게시글 수정 화면 (작성자 본인만 접근)
