@@ -25,18 +25,24 @@ public class BoardController {
     private PostService postService;
 
     // 게시글 목록 및 검색
-    // GET /board?page=0&keyword=
+    // GET /board?page=0&keyword=&type=content
     @GetMapping
     public String list(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(required = false) String keyword,
+            @RequestParam(defaultValue = "content") String type,
             Model model) {
 
-        Page<Post> posts = postService.findPage(keyword, page);
+        Page<Post> posts = postService.findPage(
+            keyword,
+            type,
+            page
+        );
 
         model.addAttribute("posts", posts.getContent());
         model.addAttribute("page", posts);
         model.addAttribute("keyword", keyword);
+        model.addAttribute("type", type);
 
         // 일반 게시판 페이지 이동 주소
         model.addAttribute("pageUrl", "/board");
@@ -44,8 +50,8 @@ public class BoardController {
         return "board/list";
     }
 
-    // 9주차: 내가 쓴 글 목록
-    // GET /board/my
+    // 내가 쓴 글 목록
+    // GET /board/my?page=0
     @GetMapping("/my")
     public String myPosts(
             @RequestParam(defaultValue = "0") int page,
@@ -69,6 +75,7 @@ public class BoardController {
 
         // 검색어 없음
         model.addAttribute("keyword", null);
+        model.addAttribute("type", "content");
 
         // 내가 쓴 글 페이지 이동 주소
         model.addAttribute("pageUrl", "/board/my");
@@ -122,7 +129,10 @@ public class BoardController {
         model.addAttribute("post", post);
 
         // 댓글 기능 유지
-        model.addAttribute("comments", commentService.findByPost(post));
+        model.addAttribute(
+            "comments",
+            commentService.findByPost(post)
+        );
 
         return "board/detail";
     }

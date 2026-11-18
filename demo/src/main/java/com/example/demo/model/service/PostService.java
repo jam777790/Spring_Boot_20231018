@@ -93,7 +93,7 @@ public class PostService {
             );
     }
 
-    // 9주차: 게시글 조회 및 조회수 증가
+    // 게시글 조회 및 조회수 증가
     @Transactional
     public Post read(Long id) {
 
@@ -105,7 +105,7 @@ public class PostService {
         return postRepository.save(post);
     }
 
-    // 9주차: 내가 작성한 게시글 조회
+    // 내가 작성한 게시글 조회 및 페이징
     public Page<Post> findMyPosts(String username, int page) {
 
         PageRequest pageable = PageRequest.of(
@@ -185,7 +185,9 @@ public class PostService {
     }
 
     // 게시글 페이징 및 검색
-    public Page<Post> findPage(String keyword, int page) {
+    // type이 writer이면 작성자 검색
+    // 그 외에는 제목 + 내용 검색
+    public Page<Post> findPage(String keyword, String type, int page) {
 
         PageRequest pageable = PageRequest.of(
             Math.max(page, 0),
@@ -193,14 +195,33 @@ public class PostService {
             Sort.by(Sort.Direction.DESC, "id")
         );
 
+        // 검색어가 없으면 전체 게시글 조회
         if (keyword == null || keyword.isBlank()) {
 
             return postRepository.findAll(pageable);
         }
 
+        String searchKeyword = keyword.trim();
+
+        // 작성자 이름 검색
+        if ("writer".equals(type)) {
+
+            return postRepository.searchByWriter(
+                searchKeyword,
+                pageable
+            );
+        }
+
+        // 제목 + 내용 검색
         return postRepository.search(
-            keyword.trim(),
+            searchKeyword,
             pageable
         );
+    }
+
+    // 기존 findPage(keyword, page)를 사용하는 코드와의 호환
+    public Page<Post> findPage(String keyword, int page) {
+
+        return findPage(keyword, "content", page);
     }
 }
