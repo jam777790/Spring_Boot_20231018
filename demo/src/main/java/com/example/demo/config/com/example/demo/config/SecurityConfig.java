@@ -57,6 +57,8 @@ public class SecurityConfig {
 
                 .requestMatchers("/board", "/board/{id:\\d+}").permitAll() // 게시판 목록·상세 : 누구나
 
+                .requestMatchers("/uploads/**").permitAll()
+
                 // 6. 나머지 요청은 로그인한 사용자만 접근
                 .anyRequest().authenticated()
             )

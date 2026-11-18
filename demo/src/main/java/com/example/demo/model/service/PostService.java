@@ -21,6 +21,8 @@ import com.example.demo.model.domain.Post;
 import com.example.demo.model.dto.PostForm;
 import com.example.demo.model.repository.MemberRepository;
 import com.example.demo.model.repository.PostRepository;
+import java.util.Collection;
+
 
 @Service
 public class PostService {
@@ -33,6 +35,9 @@ public class PostService {
 
     @Autowired
     private MemberRepository memberRepository;
+
+    @Autowired // [11주차] 단계 2 : 업로드 파일 저장소 (제공 코드)
+    private FileStore fileStore;
 
     // 전체 게시글 목록 (최신 글 순서)
     public List<Post> findAll() {
@@ -58,6 +63,8 @@ public class PostService {
         post.setContent(form.getContent());
         post.setAuthor(author);
         post.setCreatedAt(LocalDateTime.now());
+        post.setCapacity(form.getCapacity());
+        post.setPosterFile(fileStore.save(form.getPoster()));
 
         return postRepository.save(post);
     }
@@ -77,6 +84,14 @@ public class PostService {
 
             throw new IllegalArgumentException(
                 "제목은 100자까지 입력할 수 있습니다."
+            );
+        }
+
+        if (form.getCapacity() != null && (form.getCapacity() < 1 || form.getCapacity() > 100)) {
+
+        throw new IllegalArgumentException(
+
+            "모집 인원은 1~100명으로 입력하세요."
             );
         }
     }
@@ -223,5 +238,9 @@ public class PostService {
     public Page<Post> findPage(String keyword, int page) {
 
         return findPage(keyword, "content", page);
+    }
+
+    public List<Post> findAllById(Collection<Long> ids) {
+    return postRepository.findAllById(ids); // SELECT ... WHERE id IN (?, ?, ?)
     }
 }
